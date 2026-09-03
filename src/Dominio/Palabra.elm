@@ -6,6 +6,7 @@ module Dominio.Palabra exposing
     , descripcionError
     , desdeTexto
     , longitudRequerida
+    , porDefecto
     )
 
 {-| Representa una palabra válida del juego: exactamente cinco letras
@@ -83,6 +84,20 @@ descripcionError error =
             "El carácter '"
                 ++ String.fromChar caracter
                 ++ "' no es una letra válida."
+
+
+{-| Una palabra válida conocida, usada como valor de respaldo en los
+lugares donde el sistema de tipos exige un `Palabra` y no hay ninguno
+disponible (por ejemplo, si el diccionario quedara vacío).
+
+Este módulo es el único que puede construir una `Palabra` sin pasar por
+`desdeTexto`, porque es el dueño del constructor. Lo hacemos una sola
+vez, con un literal, y lo cubrimos con una prueba.
+
+-}
+porDefecto : Palabra
+porDefecto =
+    Palabra (String.toList "gatos")
 
 
 
