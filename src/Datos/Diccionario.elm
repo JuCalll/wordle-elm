@@ -1,14 +1,15 @@
 module Datos.Diccionario exposing
-    ( contiene
-    , crudas
+    ( crudas
+    , esAceptada
+    , esSolucion
     , generador
-    , palabras
+    , soluciones
     )
 
-{-| La lista de palabras del juego.
+{-| La lista de soluciones del juego.
 
-Las palabras se guardan como texto plano en `crudas` y se validan al
-convertirlas en `palabras`. La prueba `DiccionarioTest` garantiza que
+Las soluciones se guardan como texto plano en `crudas` y se validan al
+convertirlas en `soluciones`. La prueba `DiccionarioTest` garantiza que
 ninguna entrada se pierda en esa conversión: si alguien agrega una
 palabra con tilde o de longitud incorrecta, la prueba falla y avisa.
 
@@ -635,28 +636,37 @@ crudas =
 
 {-| Solo las entradas que pasaron la validación.
 -}
-palabras : List Palabra
-palabras =
+soluciones : List Palabra
+soluciones =
     List.filterMap (Palabra.desdeTexto >> Result.toMaybe) crudas
 
 
 {-| ¿Está esta palabra en el diccionario? Se usa para rechazar
-intentos que no son palabras reales.
+intentos que no son soluciones reales.
 -}
-contiene : Palabra -> Bool
-contiene palabra =
+esSolucion : Palabra -> Bool
+esSolucion palabra =
     Set.member (Palabra.aTexto palabra) conjunto
 
 
-{-| Descripción de cómo elegir una palabra al azar.
+{-| ¿Se acepta como intento?
 
-Ojo: esto NO elige nada. Es un valor que describe un sorteo. Quien lo
-ejecuta es el runtime, cuando `Main` lo entrega como `Cmd`.
+Hoy aceptamos cualquier palabra bien formada: cinco letras del
+alfabeto español sin tildes. Es deliberadamente permisivo, porque una
+lista corta de soluciones haría el juego injugable.
+
+Cuando exista una lista amplia de palabras válidas, se cambia solo
+esta función; ni `Partida` ni `Main` se enteran.
 
 -}
+esAceptada : Palabra -> Bool
+esAceptada _ =
+    True
+
+
 generador : Random.Generator Palabra
 generador =
-    case palabras of
+    case soluciones of
         primera :: resto ->
             Random.uniform primera resto
 

@@ -85,7 +85,7 @@ update msg model =
             )
 
         EnviarPresionado ->
-            case Partida.enviar Diccionario.contiene model.partida of
+            case Partida.enviar Diccionario.esAceptada model.partida of
                 Ok siguiente ->
                     ( { partida = siguiente, aviso = Nothing }
                     , Cmd.none

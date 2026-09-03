@@ -12,9 +12,7 @@ suite =
     describe "Datos.Diccionario"
         [ test "ninguna palabra se pierde al validar" <|
             \_ ->
-                -- Si esta prueba falla, alguna entrada de `crudas`
-                -- tiene tilde, longitud incorrecta o un carácter raro.
-                List.length Diccionario.palabras
+                List.length Diccionario.soluciones
                     |> Expect.equal (List.length Diccionario.crudas)
         , test "no hay palabras repetidas" <|
             \_ ->
@@ -22,15 +20,20 @@ suite =
                     |> Expect.equal (List.length Diccionario.crudas)
         , test "el diccionario no está vacío" <|
             \_ ->
-                Expect.greaterThan 0 (List.length Diccionario.palabras)
-        , test "contiene reconoce una palabra de la lista" <|
+                Expect.greaterThan 0 (List.length Diccionario.soluciones)
+        , test "esSolucion reconoce una palabra de la lista" <|
             \_ ->
                 Palabra.desdeTexto "gatos"
-                    |> Result.map Diccionario.contiene
+                    |> Result.map Diccionario.esSolucion
                     |> Expect.equal (Ok True)
-        , test "contiene rechaza una palabra que no está" <|
+        , test "esSolucion rechaza una palabra que no está" <|
             \_ ->
                 Palabra.desdeTexto "xkqzw"
-                    |> Result.map Diccionario.contiene
+                    |> Result.map Diccionario.esSolucion
                     |> Expect.equal (Ok False)
+        , test "esAceptada admite palabras fuera de la lista de soluciones" <|
+            \_ ->
+                Palabra.desdeTexto "perro"
+                    |> Result.map Diccionario.esAceptada
+                    |> Expect.equal (Ok True)
         ]
