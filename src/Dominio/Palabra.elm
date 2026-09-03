@@ -5,6 +5,7 @@ module Dominio.Palabra exposing
     , aTexto
     , descripcionError
     , desdeTexto
+    , esLetra
     , longitudRequerida
     , porDefecto
     )
@@ -52,7 +53,7 @@ desdeTexto texto =
         Err (LongitudIncorrecta (List.length letras))
 
     else
-        case List.filter (not << esLetraValida) letras of
+        case List.filter (not << esLetra) letras of
             invalida :: _ ->
                 Err (CaracterNoValido invalida)
 
@@ -104,8 +105,8 @@ porDefecto =
 -- INTERNO
 
 
-esLetraValida : Char -> Bool
-esLetraValida caracter =
+esLetra : Char -> Bool
+esLetra caracter =
     Set.member caracter alfabeto
 
 
